@@ -21,6 +21,24 @@
     color: $blue-800;
     @include text-preset-7;
   }
+
+  &-modal {
+    padding: 11px 16px;
+    max-width: unset;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .stats-item {
+      &-title {
+        @include text-preset-12;
+      }
+
+      &-value {
+        @include text-preset-8;
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {
@@ -37,6 +55,20 @@
 
     &-value {
       @include text-preset-5;
+    }
+
+    &-modal {
+      padding: 16px 32px;
+
+      .stats-item {
+        &-title {
+          @include text-preset-9;
+        }
+
+        &-value {
+          @include text-preset-5;
+        }
+      }
     }
   }
 }

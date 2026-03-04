@@ -1,0 +1,47 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.menubar {
+  @include container;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    width: 92px;
+  }
+
+  &-btns {
+    display: flex;
+    gap: 16px;
+  }
+
+  .btn {
+    width: unset;
+    @include text-preset-10;
+
+    &-primary {
+      padding: 10px 18px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .menubar {
+    .logo {
+      width: 153px;
+    }
+
+    .btn {
+      @include text-preset-8;
+
+      &-primary {
+        padding: 13px 28px;
+      }
+
+      &-secondary {
+        padding: 13px 24px;
+      }
+    }
+  }
+}

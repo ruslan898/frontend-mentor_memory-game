@@ -1,0 +1,34 @@
+import { useState, useEffect } from 'react';
+import Button from '../button/Button';
+import './menubar.scss';
+import logo from '/src/assets/logo.svg';
+
+export default function Menubar() {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  function updateWindowWidth() {
+    setWindowWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => window.removeEventListener('resize', updateWindowWidth);
+  });
+
+  const menubarBtns =
+    windowWidth < 768 ? (
+      <Button variant="primary">Menu</Button>
+    ) : (
+      <>
+        <Button variant="primary">Restart</Button>
+        <Button variant="secondary">New Game</Button>
+      </>
+    );
+
+  return (
+    <header className="menubar">
+      <img src={logo} alt="Logo" className="logo" />
+      <div className="menubar-btns">{menubarBtns}</div>
+    </header>
+  );
+}

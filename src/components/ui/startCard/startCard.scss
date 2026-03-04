@@ -1,0 +1,24 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.start-card {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: $blue-950;
+
+  &-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+
+  &-logo path {
+    fill: $grey-50;
+  }
+}

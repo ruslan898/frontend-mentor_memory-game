@@ -1,0 +1,152 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.modal {
+  width: 327px;
+  background-color: $grey-50;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+
+  &-start {
+    padding: 25px;
+    gap: 40px;
+
+    .selection {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      &-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      &-title {
+        color: $blue-400;
+        @include text-preset-11;
+      }
+
+      &-btns {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  &-result-solo,
+  &-result-mult {
+    padding: 28px 24px;
+    gap: 24px;
+
+    .modal-result {
+      &-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      &-title {
+        color: $blue-950;
+        @include text-preset-7;
+      }
+
+      &-subtitle {
+        color: $blue-400;
+        @include text-preset-12;
+      }
+
+      &-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  }
+
+  &-menu {
+    width: 327px;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  &-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal {
+    width: 654px;
+
+    &-start {
+      padding: 57px 54px;
+      gap: 32px;
+
+      .selection {
+        gap: 32px;
+
+        &-item {
+          gap: 16px;
+        }
+
+        &-btns {
+          gap: 32px;
+
+          &.players {
+            gap: 24px;
+          }
+        }
+      }
+    }
+
+    &-result-solo,
+    &-result-mult {
+      .modal-result {
+        &-title {
+          @include text-preset-2;
+        }
+
+        &-subtitle {
+          @include text-preset-9;
+        }
+
+        &-stats {
+          gap: 16px;
+        }
+      }
+    }
+
+    &-result-solo {
+      gap: 40px;
+
+      .modal-result {
+        &-header {
+          gap: 16px;
+        }
+      }
+    }
+
+    &-result-mult {
+      gap: 56px;
+
+      .modal-result {
+        &-header {
+          gap: 8px;
+        }
+      }
+    }
+
+    &-menu {
+      width: 327px;
+    }
+
+    &-btns {
+      flex-direction: row;
+    }
+  }
+}

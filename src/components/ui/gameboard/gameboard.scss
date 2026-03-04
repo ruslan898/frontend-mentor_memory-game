@@ -1,0 +1,36 @@
+.gameboard {
+  width: 327px;
+  margin: 0 auto;
+  display: grid;
+  justify-content: center;
+
+  &-16 {
+    grid-template-columns: repeat(4, 72px);
+    grid-template-rows: repeat(4, 72px);
+    gap: 12px;
+  }
+
+  &-36 {
+    grid-template-columns: repeat(6, 46px);
+    grid-template-rows: repeat(6, 46px);
+    gap: 8px;
+  }
+}
+
+@media (min-width: 768px) {
+  .gameboard {
+    width: 572px;
+
+    &-16 {
+      grid-template-columns: repeat(4, 118px);
+      grid-template-rows: repeat(4, 118px);
+      gap: 24px;
+    }
+
+    &-36 {
+      grid-template-columns: repeat(6, 82px);
+      grid-template-rows: repeat(6, 82px);
+      gap: 16px;
+    }
+  }
+}

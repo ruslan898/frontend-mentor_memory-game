@@ -1,0 +1,38 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.stats {
+  @include container;
+  display: flex;
+  gap: 24px;
+
+  &-solo {
+    width: 327px;
+    justify-content: center;
+  }
+
+  &-mult {
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 768px) {
+  .stats {
+    &-solo {
+      width: 542px;
+      gap: 32px;
+    }
+
+    &-mult {
+      gap: 8px;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .stats {
+    &-mult {
+      gap: 32px;
+    }
+  }
+}

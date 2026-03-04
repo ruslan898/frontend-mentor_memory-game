@@ -1,0 +1,42 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.stats-item {
+  max-width: 255px;
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: 5px;
+  background: $blue-100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  &-title {
+    color: $blue-400;
+    @include text-preset-11;
+  }
+
+  &-value {
+    color: $blue-800;
+    @include text-preset-7;
+  }
+}
+
+@media (min-width: 768px) {
+  .stats-item {
+    padding: 16px 22px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+
+    &-title {
+      @include text-preset-9;
+    }
+
+    &-value {
+      @include text-preset-5;
+    }
+  }
+}

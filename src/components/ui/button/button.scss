@@ -1,0 +1,61 @@
+@use '/src/sass/variables.scss' as *;
+@use '/src/sass/mixins.scss' as *;
+
+.btn {
+  width: 100%;
+  border: none;
+  border-radius: 26px;
+  cursor: pointer;
+
+  &-primary,
+  &-secondary {
+    max-width: 264px;
+    padding: 12px;
+    @include text-preset-9;
+  }
+
+  &-primary,
+  &-big {
+    background-color: $orange-400;
+    color: $grey-50;
+  }
+
+  &-secondary {
+    background-color: $blue-100;
+    color: $blue-800;
+  }
+
+  &-big {
+    max-width: 545px;
+    padding: 12px;
+    @include text-preset-9;
+  }
+
+  &-selection {
+    max-width: 256px;
+    padding: 10px;
+    background-color: $blue-300;
+    color: $grey-50;
+    @include text-preset-10;
+  }
+}
+
+@media (min-width: 768px) {
+  .btn {
+    &-primary,
+    &-secondary {
+      padding: 13px;
+      @include text-preset-8;
+    }
+
+    &-big {
+      padding: 15px;
+      @include text-preset-5;
+    }
+
+    &-selection {
+      padding: 9px;
+      @include text-preset-6;
+    }
+  }
+}

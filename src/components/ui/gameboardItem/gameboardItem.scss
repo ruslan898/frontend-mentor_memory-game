@@ -4,7 +4,24 @@
 .gameboard-item {
   width: 100%;
   height: 100%;
+  color: $grey-50;
   background-color: $blue-800;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+
+  svg g {
+    fill: $grey-50;
+  }
+
+  &.active {
+    background-color: $orange-400;
+  }
+
+  &.guessed {
+    background-color: $blue-300;
+    cursor: not-allowed;
+  }
 }

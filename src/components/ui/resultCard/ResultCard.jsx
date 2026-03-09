@@ -1,10 +1,10 @@
-import Modal from '../modal/Modal'
-import './resultCard.scss'
+import Modal from '../modal/Modal';
+import './resultCard.scss';
 
 export default function ResultCard() {
   return (
     <div className="overlay">
-      <Modal variant='result-solo' />
+      <Modal variant="result-solo" />
     </div>
-  )
+  );
 }

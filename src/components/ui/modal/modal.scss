@@ -94,6 +94,10 @@
           gap: 16px;
         }
 
+        &-title {
+          @include text-preset-8;
+        }
+
         &-btns {
           gap: 32px;
 

@@ -5,6 +5,7 @@
   width: 100%;
   border: none;
   border-radius: 26px;
+  transition: 0.2s all;
   cursor: pointer;
 
   &-primary,
@@ -18,11 +19,20 @@
   &-big {
     background-color: $orange-400;
     color: $grey-50;
+
+    &:hover {
+      background-color: $orange-300;
+    }
   }
 
   &-secondary {
     background-color: $blue-100;
     color: $blue-800;
+
+    &:hover {
+      color: $white;
+      background-color: $blue-350;
+    }
   }
 
   &-big {
@@ -37,6 +47,14 @@
     background-color: $blue-300;
     color: $grey-50;
     @include text-preset-10;
+
+    &:hover {
+      background-color: $blue-350;
+    }
+
+    &.active {
+      background-color: $blue-800;
+    }
   }
 }
 

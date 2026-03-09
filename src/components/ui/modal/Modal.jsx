@@ -3,21 +3,27 @@ import clsx from 'clsx';
 import StatsItem from '../statsItem/StatsItem';
 import Button from '../button/Button';
 import { AppContext } from '../../context/AppContext';
+import { formatTime } from '../../../utility/formatTime';
 import './modal.scss';
 
-export default function Modal({ variant = 'start' }) {
+export default function Modal({ variant = 'result-solo' }) {
   const {
     updateGameSettings,
     gameSettings,
     setGameStarted,
     setPlayersCount,
-    playersCount,
+    players,
     resetGame,
     gameStats,
+    setPaused,
   } = useContext(AppContext);
 
   const { theme, gridSize } = gameSettings;
   const { time, moves } = gameStats;
+  const playersCount = players.length;
+  const scoreRank = [...players].sort((p1, p2) => p2.score - p1.score);
+  const highestScore = scoreRank[0].score;
+  const winners = scoreRank.filter((player) => player.score === highestScore);
 
   const classes = clsx('modal', `modal-${variant}`);
 
@@ -114,7 +120,11 @@ export default function Modal({ variant = 'start' }) {
           </p>
         </div>
         <div className="modal-result-stats">
-          <StatsItem title="Time Elapsed" value={time} variant="modal" />
+          <StatsItem
+            title="Time Elapsed"
+            value={formatTime(time)}
+            variant="modal"
+          />
           <StatsItem
             title="Moves Taken"
             value={`${moves} Moves`}
@@ -133,16 +143,61 @@ export default function Modal({ variant = 'start' }) {
     );
   }
 
+  if (variant === 'result-mult') {
+    return (
+      <div className={classes}>
+        <div className="modal-result-header">
+          <h2 className="modal-result-title">
+            {winners.length === 1 ? `${winners[0].name} Wins!` : 'It’s a tie!'}
+          </h2>
+          <p className="modal-result-subtitle">
+            Game over! Here are the results…
+          </p>
+        </div>
+        <div className="modal-result-stats">
+          {scoreRank.map((player) => {
+            const { name, score } = player;
+            return (
+              <StatsItem
+                title={name}
+                value={`${score} Pairs`}
+                variant="modal"
+                winner={score === highestScore}
+              />
+            );
+          })}
+        </div>
+        <Button variant="secondary" onClick={() => resetGame('new-game')}>
+          Setup New Game
+        </Button>
+      </div>
+    );
+  }
+
   if (variant === 'menu') {
     return (
       <div className={classes}>
-        <Button variant="primary" onClick={() => resetGame('restart')}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            resetGame('restart');
+            setPaused(false);
+          }}
+        >
           Restart
         </Button>
-        <Button variant="secondary" onClick={() => resetGame('new-game')}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            resetGame('new-game');
+            setPaused(false);
+          }}
+        >
           New Game
         </Button>
-        <Button variant="secondary">Resume Game</Button>
+        <Button variant="secondary" onClick={() => setPaused(false)}>
+          Resume Game
+        </Button>
       </div>
     );
   }

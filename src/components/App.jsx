@@ -6,6 +6,7 @@ import Gameboard from './ui/gameboard/Gameboard';
 import Stats from './ui/stats/Stats';
 import ResultCard from './ui/resultCard/ResultCard';
 import StartCard from './ui/startCard/StartCard';
+import PauseMenu from './ui/pauseMenu/PauseMenu';
 import { AppContext } from './context/AppContext';
 import './app.scss';
 
@@ -20,15 +21,38 @@ export default function App() {
     time: 0,
     moves: 0,
   });
-
   const [players, setPlayers] = useState(
     [...new Array(1)].map((item, index) => ({
       name: `Player ${index + 1}`,
       score: 0,
     })),
   );
+  const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const { theme, gridSize } = gameSettings;
+
+  console.log(activePlayerIndex);
+
+  function changeActivePlayer() {
+    setActivePlayerIndex((prevVal) => {
+      if (prevVal === players.length - 1) {
+        return 0;
+      } else {
+        return prevVal + 1;
+      }
+    });
+  }
+
+  function incrementScore() {
+    const index = activePlayerIndex;
+
+    setPlayers((prevVal) =>
+      prevVal.map((item, i) => {
+        return i === index ? { ...item, score: item.score++ } : { ...item };
+      }),
+    );
+  }
 
   function setPlayersCount(count) {
     setPlayers(
@@ -96,21 +120,25 @@ export default function App() {
       time: 0,
       moves: 0,
     });
+
+    setPlayers((prevVal) => prevVal.map((player) => ({ ...player, score: 0 })));
+
+    setActivePlayerIndex(0);
   }
 
   const [gameboard, setGameboard] = useState(() =>
     initGameboard(gameboardValues),
   );
 
-// =========================================================================
-useEffect(() => {
-  const isGameOver =
+  // =========================================================================
+  useEffect(() => {
+    const isGameOver =
       gameboard.length > 0 && gameboard.every((obj) => obj.guessed === true);
     setGameOver(isGameOver);
   }, [gameboard]);
 
   useEffect(() => {
-    if (!gameStarted || gameOver) {
+    if (!gameStarted || gameOver || players.length > 1) {
       return;
     }
 
@@ -118,10 +146,13 @@ useEffect(() => {
       setGameStats((prevVal) => ({ ...prevVal, time: prevVal.time + 1 }));
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [gameStarted, gameOver]);
-  // =========================================================================
+    if (paused) {
+      clearInterval(timer);
+    }
 
+    return () => clearInterval(timer);
+  }, [gameStarted, gameOver, paused]);
+  // =========================================================================
 
   console.log(gameboard);
 
@@ -132,13 +163,17 @@ useEffect(() => {
         updateGameSettings,
         setGameStarted,
         setPlayersCount,
-        playersCount: players.length,
+        players,
         setGameOver,
         gameboard,
         setGameboard,
         resetGame,
         gameStats,
         setGameStats,
+        setPaused,
+        activePlayerIndex,
+        changeActivePlayer,
+        incrementScore,
       }}
     >
       <main className="app">
@@ -153,7 +188,12 @@ useEffect(() => {
         ) : (
           <StartCard />
         )}
-        {gameOver && <ResultCard />}
+        {gameOver && (
+          <ResultCard
+            variant={`result-${players.length === 1 ? 'solo' : 'mult'}`}
+          />
+        )}
+        {paused && <PauseMenu />}
       </main>
     </AppContext.Provider>
   );

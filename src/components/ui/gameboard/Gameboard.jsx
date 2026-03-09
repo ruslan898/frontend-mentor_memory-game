@@ -5,8 +5,14 @@ import { AppContext } from '../../context/AppContext';
 import './gameboard.scss';
 
 export default function Gameboard({ className }) {
-  const { gameSettings, gameboard, setGameboard, setGameStats } =
-    useContext(AppContext);
+  const {
+    gameSettings,
+    gameboard,
+    setGameboard,
+    setGameStats,
+    changeActivePlayer,
+    incrementScore,
+  } = useContext(AppContext);
   const { gridSize } = gameSettings;
 
   const [activeChars, setActiveChars] = useState([]);
@@ -36,6 +42,11 @@ export default function Gameboard({ className }) {
 
       setActiveChars([]);
       setGameStats((prevVal) => ({ ...prevVal, moves: prevVal.moves + 1 }));
+      if (isMatch) {
+        incrementScore();
+      } else {
+        changeActivePlayer();
+      }
     }, 1500);
 
     return () => clearTimeout(timeoutId);

@@ -4,15 +4,11 @@
 .stats {
   @include container;
   display: flex;
+  justify-content: center;
   gap: 24px;
 
   &-solo {
     width: 327px;
-    justify-content: center;
-  }
-
-  &-mult {
-    justify-content: space-between;
   }
 }
 

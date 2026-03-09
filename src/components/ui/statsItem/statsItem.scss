@@ -2,6 +2,7 @@
 @use '/src/sass/mixins.scss' as *;
 
 .stats-item {
+  position: relative;
   max-width: 255px;
   width: 100%;
   padding: 10px 13px;
@@ -39,6 +40,43 @@
       }
     }
   }
+
+  &.active {
+    color: $grey-50;
+    background-color: $orange-400;
+
+    .stats-item {
+      &-title,
+      &-value {
+        color: $grey-50;
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: -4px;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid $orange-400;
+    }
+  }
+
+  &.winner {
+    background-color: $blue-950;
+
+    .stats-item {
+      &-title,
+      &-value {
+        color: $grey-50;
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {
@@ -68,6 +106,28 @@
         &-value {
           @include text-preset-5;
         }
+      }
+    }
+
+    &.active {
+      &::before {
+        top: -6px;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 12px solid $orange-400;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .stats-item {
+    &.active {
+      &::before {
+        top: -9px;
+        border-left: 19px solid transparent;
+        border-right: 19px solid transparent;
+        border-bottom: 19px solid $orange-400;
       }
     }
   }

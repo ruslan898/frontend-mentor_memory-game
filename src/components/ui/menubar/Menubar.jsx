@@ -1,26 +1,20 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import Button from '../button/Button';
+import { useWindowWidth } from '../../hooks/useWindowWidth';
 import './menubar.scss';
 import logo from '/src/assets/logo.svg';
 
 export default function Menubar() {
-  const { resetGame } = useContext(AppContext);
+  const { resetGame, setPaused } = useContext(AppContext);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  function updateWindowWidth() {
-    setWindowWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', updateWindowWidth);
-    return () => window.removeEventListener('resize', updateWindowWidth);
-  });
+  const windowWidth = useWindowWidth();
 
   const menubarBtns =
     windowWidth < 768 ? (
-      <Button variant="primary">Menu</Button>
+      <Button variant="primary" onClick={() => setPaused(true)}>
+        Menu
+      </Button>
     ) : (
       <>
         <Button variant="primary" onClick={() => resetGame('restart')}>

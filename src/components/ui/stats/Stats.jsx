@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import clsx from 'clsx';
+import { nanoid } from 'nanoid';
 import { AppContext } from '../../context/AppContext';
 import { formatTime } from '../../../utility/formatTime';
 import { useWindowWidth } from '../../hooks/useWindowWidth';
@@ -32,6 +33,7 @@ export default function Stats() {
               }
               value={score}
               active={index === activePlayerIndex}
+              key={nanoid()}
             />
           );
         })}

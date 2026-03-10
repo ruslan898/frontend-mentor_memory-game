@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import clsx from 'clsx';
+import { nanoid } from 'nanoid';
 import StatsItem from '../statsItem/StatsItem';
 import Button from '../button/Button';
 import { AppContext } from '../../context/AppContext';
@@ -163,6 +164,7 @@ export default function Modal({ variant = 'result-solo' }) {
                 value={`${score} Pairs`}
                 variant="modal"
                 winner={score === highestScore}
+                key={nanoid()}
               />
             );
           })}

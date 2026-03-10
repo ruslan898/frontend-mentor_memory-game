@@ -50,7 +50,13 @@ export default function Gameboard({ className }) {
     }, 1500);
 
     return () => clearTimeout(timeoutId);
-  }, [activeChars, setGameboard, setGameStats]);
+  }, [
+    activeChars,
+    setGameboard,
+    setGameStats,
+    changeActivePlayer,
+    incrementScore,
+  ]);
 
   function guessChar(id) {
     const guessedChar = gameboard.find((obj) => obj.id === id);

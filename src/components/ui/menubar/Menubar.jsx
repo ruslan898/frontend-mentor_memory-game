@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useContext, memo } from 'react';
 import { AppContext } from '../../context/AppContext';
 import Button from '../button/Button';
 import { useWindowWidth } from '../../hooks/useWindowWidth';
 import './menubar.scss';
 import logo from '/src/assets/logo.svg';
 
-export default function Menubar() {
+export default memo(function Menubar() {
   const { resetGame, setPaused } = useContext(AppContext);
 
   const windowWidth = useWindowWidth();
@@ -32,4 +32,4 @@ export default function Menubar() {
       <div className="menubar-btns">{menubarBtns}</div>
     </header>
   );
-}
+});

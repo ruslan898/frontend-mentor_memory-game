@@ -10,7 +10,7 @@ export function useWindowWidth() {
   useEffect(() => {
     window.addEventListener('resize', updateWindowWidth);
     return () => window.removeEventListener('resize', updateWindowWidth);
-  });
+  }, []);
 
   return windowWidth;
 }

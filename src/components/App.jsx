@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { nanoid } from 'nanoid';
 import { getIcons } from '../utility/getIcons';
 import Menubar from './ui/menubar/Menubar';
@@ -12,7 +12,6 @@ import './app.scss';
 
 export default function App() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
   const [gameSettings, setGameSettings] = useState({
     theme: 'numbers',
     gridSize: 16,
@@ -32,9 +31,7 @@ export default function App() {
 
   const { theme, gridSize } = gameSettings;
 
-  console.log(activePlayerIndex);
-
-  function changeActivePlayer() {
+  const changeActivePlayer = useCallback(() => {
     setActivePlayerIndex((prevVal) => {
       if (prevVal === players.length - 1) {
         return 0;
@@ -42,49 +39,25 @@ export default function App() {
         return prevVal + 1;
       }
     });
-  }
+  }, [players.length]);
 
-  function incrementScore() {
+  const incrementScore = useCallback(() => {
     const index = activePlayerIndex;
-
     setPlayers((prevVal) =>
       prevVal.map((item, i) => {
-        return i === index ? { ...item, score: item.score++ } : { ...item };
+        return i === index ? { ...item, score: item.score + 1 } : { ...item };
       }),
     );
-  }
+  }, [activePlayerIndex]);
 
-  function setPlayersCount(count) {
+  const setPlayersCount = useCallback((count) => {
     setPlayers(
       [...new Array(count)].map((item, index) => ({
         name: `Player ${index + 1}`,
         score: 0,
       })),
     );
-  }
-
-  function updateGameSettings(key, prop) {
-    const newSettings = { ...gameSettings, [key]: prop };
-    setGameSettings(newSettings);
-
-    // Reset gameboard with new settings
-    const newNumberValues = [...Array(newSettings.gridSize / 2).fill(1)].map(
-      (x, i) => x + i,
-    );
-    const newIconValues = getIcons().slice(0, newSettings.gridSize / 2);
-    const newGameboardValues =
-      newSettings.theme === 'numbers' ? newNumberValues : newIconValues;
-
-    setGameboard(initGameboard(newGameboardValues));
-  }
-
-  const numberValues = [...Array(gameSettings.gridSize / 2).fill(1)].map(
-    (x, i) => x + i,
-  );
-
-  const iconValues = getIcons().slice(0, gridSize / 2);
-
-  const gameboardValues = theme === 'numbers' ? numberValues : iconValues;
+  }, []);
 
   function shuffleArr(arr) {
     const shuffledArr = [...arr];
@@ -97,48 +70,85 @@ export default function App() {
     return shuffledArr;
   }
 
-  function initGameboard(valuesArr) {
+  const initGameboard = useCallback((valuesArr) => {
     return [...shuffleArr(valuesArr), ...shuffleArr(valuesArr)].map((item) => ({
       id: nanoid(),
       value: item,
       active: false,
       guessed: false,
     }));
-  }
+  }, []);
 
-  function resetGame(type) {
-    setGameOver(false);
-    if (type === 'restart') {
-      setGameboard(initGameboard(gameboardValues));
-    }
+  const numberValues = [...Array(gameSettings.gridSize / 2).fill(1)].map(
+    (x, i) => x + i,
+  );
 
-    if (type === 'new-game') {
-      setGameStarted(false);
-    }
+  const iconValues = getIcons().slice(0, gridSize / 2);
 
-    setGameStats({
-      time: 0,
-      moves: 0,
-    });
-
-    setPlayers((prevVal) => prevVal.map((player) => ({ ...player, score: 0 })));
-
-    setActivePlayerIndex(0);
-  }
+  const gameboardValues = theme === 'numbers' ? numberValues : iconValues;
 
   const [gameboard, setGameboard] = useState(() =>
     initGameboard(gameboardValues),
   );
 
-  // =========================================================================
-  useEffect(() => {
-    const isGameOver =
-      gameboard.length > 0 && gameboard.every((obj) => obj.guessed === true);
-    setGameOver(isGameOver);
+  const gameOver = useMemo(() => {
+    return (
+      gameStarted &&
+      gameboard.length > 0 &&
+      gameboard.every((tile) => tile.guessed)
+    );
+  }, [gameStarted, gameboard]);
+
+  const hasFlippedTile = useMemo(() => {
+    return gameboard.some((tile) => tile.active || tile.guessed);
   }, [gameboard]);
 
+  const updateGameSettings = useCallback(
+    (key, prop) => {
+      const newSettings = { ...gameSettings, [key]: prop };
+      setGameSettings(newSettings);
+
+      // Reset gameboard with new settings
+      const newNumberValues = [...Array(newSettings.gridSize / 2).fill(1)].map(
+        (x, i) => x + i,
+      );
+      const newIconValues = getIcons().slice(0, newSettings.gridSize / 2);
+      const newGameboardValues =
+        newSettings.theme === 'numbers' ? newNumberValues : newIconValues;
+
+      setGameboard(initGameboard(newGameboardValues));
+    },
+    [gameSettings, initGameboard],
+  );
+
+  const resetGame = useCallback(
+    (type) => {
+      if (type === 'restart') {
+        setGameboard(initGameboard(gameboardValues));
+      }
+
+      if (type === 'new-game') {
+        setGameboard(initGameboard(gameboardValues));
+        setGameStarted(false);
+      }
+
+      setGameStats({
+        time: 0,
+        moves: 0,
+      });
+
+      setPlayers((prevVal) =>
+        prevVal.map((player) => ({ ...player, score: 0 })),
+      );
+
+      setActivePlayerIndex(0);
+    },
+    [gameboardValues, initGameboard],
+  );
+
+  // =========================================================================
   useEffect(() => {
-    if (!gameStarted || gameOver || players.length > 1) {
+    if (!gameStarted || gameOver || players.length > 1 || !hasFlippedTile) {
       return;
     }
 
@@ -151,31 +161,42 @@ export default function App() {
     }
 
     return () => clearInterval(timer);
-  }, [gameStarted, gameOver, paused]);
+  }, [gameStarted, gameOver, paused, players.length, hasFlippedTile]);
   // =========================================================================
 
-  console.log(gameboard);
+  const contextValue = useMemo(
+    () => ({
+      gameSettings,
+      updateGameSettings,
+      setGameStarted,
+      setPlayersCount,
+      players,
+      gameboard,
+      setGameboard,
+      resetGame,
+      gameStats,
+      setGameStats,
+      setPaused,
+      activePlayerIndex,
+      changeActivePlayer,
+      incrementScore,
+    }),
+    [
+      gameSettings,
+      updateGameSettings,
+      setPlayersCount,
+      players,
+      gameboard,
+      resetGame,
+      gameStats,
+      activePlayerIndex,
+      changeActivePlayer,
+      incrementScore,
+    ],
+  );
 
   return (
-    <AppContext.Provider
-      value={{
-        gameSettings,
-        updateGameSettings,
-        setGameStarted,
-        setPlayersCount,
-        players,
-        setGameOver,
-        gameboard,
-        setGameboard,
-        resetGame,
-        gameStats,
-        setGameStats,
-        setPaused,
-        activePlayerIndex,
-        changeActivePlayer,
-        incrementScore,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       <main className="app">
         {gameStarted ? (
           <div className="app-wrapper">
@@ -188,7 +209,7 @@ export default function App() {
         ) : (
           <StartCard />
         )}
-        {gameOver && (
+        {gameStarted && gameOver && (
           <ResultCard
             variant={`result-${players.length === 1 ? 'solo' : 'mult'}`}
           />

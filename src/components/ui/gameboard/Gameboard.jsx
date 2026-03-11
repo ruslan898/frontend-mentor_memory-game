@@ -12,6 +12,8 @@ export default function Gameboard({ className }) {
     setGameStats,
     changeActivePlayer,
     incrementScore,
+    hasFlippedTile,
+    setHasFlippedTile,
   } = useContext(AppContext);
   const { gridSize } = gameSettings;
 
@@ -86,7 +88,16 @@ export default function Gameboard({ className }) {
   }
 
   const gridItems = gameboard.map((obj) => (
-    <GameboardItem info={obj} onClick={() => guessChar(obj.id)} key={obj.id} />
+    <GameboardItem
+      info={obj}
+      onClick={() => {
+        if (!hasFlippedTile) {
+          setHasFlippedTile(true);
+        }
+        guessChar(obj.id);
+      }}
+      key={obj.id}
+    />
   ));
 
   const classes = clsx('gameboard', `gameboard-${gridSize}`, className);

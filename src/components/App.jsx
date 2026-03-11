@@ -28,6 +28,7 @@ export default function App() {
   );
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [hasFlippedTile, setHasFlippedTile] = useState(false);
 
   const { theme, gridSize } = gameSettings;
 
@@ -99,10 +100,6 @@ export default function App() {
     );
   }, [gameStarted, gameboard]);
 
-  const hasFlippedTile = useMemo(() => {
-    return gameboard.some((tile) => tile.active || tile.guessed);
-  }, [gameboard]);
-
   const updateGameSettings = useCallback(
     (key, prop) => {
       const newSettings = { ...gameSettings, [key]: prop };
@@ -142,6 +139,8 @@ export default function App() {
       );
 
       setActivePlayerIndex(0);
+
+      setHasFlippedTile(false);
     },
     [gameboardValues, initGameboard],
   );
@@ -180,6 +179,8 @@ export default function App() {
       activePlayerIndex,
       changeActivePlayer,
       incrementScore,
+      hasFlippedTile,
+      setHasFlippedTile,
     }),
     [
       gameSettings,
@@ -192,6 +193,7 @@ export default function App() {
       activePlayerIndex,
       changeActivePlayer,
       incrementScore,
+      hasFlippedTile,
     ],
   );
 

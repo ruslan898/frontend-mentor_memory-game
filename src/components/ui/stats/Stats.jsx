@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { AppContext } from '../../context/AppContext';
 import { formatTime } from '../../../utility/formatTime';
-import { useWindowWidth } from '../../hooks/useWindowWidth';
+import { useWindowWidth } from '../../../hooks/useWindowWidth';
 import StatsItem from '../statsItem/StatsItem';
 import './stats.scss';
 

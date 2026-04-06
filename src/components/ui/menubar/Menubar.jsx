@@ -1,7 +1,7 @@
 import { useContext, memo } from 'react';
 import { AppContext } from '../../context/AppContext';
 import Button from '../button/Button';
-import { useWindowWidth } from '../../hooks/useWindowWidth';
+import { useWindowWidth } from '../../../hooks/useWindowWidth';
 import './menubar.scss';
 import logo from '/src/assets/logo.svg';
 

@@ -8,6 +8,7 @@ import PauseMenu from './ui/pauseMenu/PauseMenu';
 import { AppContext } from './context/AppContext';
 import { useGameboard } from '../hooks/useGameboard';
 import { useGameSettings } from '../hooks/useGameSettings';
+import { usePlayers } from '../hooks/usePlayers';
 import './app.scss';
 
 export default function App() {
@@ -16,47 +17,22 @@ export default function App() {
     time: 0,
     moves: 0,
   });
-  const [players, setPlayers] = useState(
-    [...new Array(1)].map((item, index) => ({
-      name: `Player ${index + 1}`,
-      score: 0,
-    })),
-  );
-  const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+
   const [paused, setPaused] = useState(false);
   const [hasFlippedTile, setHasFlippedTile] = useState(false);
 
   const { gameSettings, updateGameSettings } = useGameSettings();
   const { gameboard, setGameboard, setGameboardValues, gameboardValues } =
     useGameboard(gameSettings);
-
-  const changeActivePlayer = useCallback(() => {
-    setActivePlayerIndex((prevVal) => {
-      if (prevVal === players.length - 1) {
-        return 0;
-      } else {
-        return prevVal + 1;
-      }
-    });
-  }, [players.length]);
-
-  const incrementScore = useCallback(() => {
-    const index = activePlayerIndex;
-    setPlayers((prevVal) =>
-      prevVal.map((item, i) => {
-        return i === index ? { ...item, score: item.score + 1 } : { ...item };
-      }),
-    );
-  }, [activePlayerIndex]);
-
-  const setPlayersCount = useCallback((count) => {
-    setPlayers(
-      [...new Array(count)].map((item, index) => ({
-        name: `Player ${index + 1}`,
-        score: 0,
-      })),
-    );
-  }, []);
+  const {
+    players,
+    setPlayers,
+    setPlayersCount,
+    activePlayerIndex,
+    setActivePlayerIndex,
+    changeActivePlayer,
+    incrementScore,
+  } = usePlayers();
 
   const gameOver = useMemo(() => {
     return (
@@ -90,10 +66,9 @@ export default function App() {
 
       setHasFlippedTile(false);
     },
-    [gameboardValues, setGameboardValues, setGameboard],
+    [gameboardValues, setGameboardValues, setGameboard, setActivePlayerIndex, setPlayers],
   );
 
-  // =========================================================================
   useEffect(() => {
     if (!gameStarted || gameOver || players.length > 1 || !hasFlippedTile) {
       return;
@@ -109,7 +84,6 @@ export default function App() {
 
     return () => clearInterval(timer);
   }, [gameStarted, gameOver, paused, players.length, hasFlippedTile]);
-  // =========================================================================
 
   const contextValue = useMemo(
     () => ({
